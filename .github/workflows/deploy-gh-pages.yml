@@ -1,0 +1,46 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allows manual trigger from GitHub UI
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./support-ticket-desk
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: './support-ticket-desk/package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular app
+        run: npm run build -- --base-href /qa-test-sample-application/
+
+      - name: Copy 404.html for SPA routing
+        run: cp dist/support-ticket-desk/browser/index.html dist/support-ticket-desk/browser/404.html
+
+      - name: Add .nojekyll file
+        run: touch dist/support-ticket-desk/browser/.nojekyll
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./support-ticket-desk/dist/support-ticket-desk/browser
+          publish_branch: gh-pages
+
