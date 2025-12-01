@@ -25,8 +25,8 @@ export class CustomerService {
   }
 
   private getRandomDelay(): number {
-    // Random delay between 250-1000ms for realistic network simulation
-    return 250 + Math.floor(Math.random() * 750);
+    // Random delay between 250-2000ms for realistic network simulation
+    return 250 + Math.floor(Math.random() * 1750);
   }
 
   private withDelay<T>(value: T): Observable<T> {
@@ -99,6 +99,11 @@ export class CustomerService {
   }
 
   createCustomer(data: CustomerFormData): Observable<Customer> {
+    // Predictable error case for testing: name containing "FAIL_CREATE"
+    if (data.name.includes('FAIL_CREATE')) {
+      return this.withDelayError(new Error('Failed to create customer: A customer with similar details already exists in the system. Please verify the information and try again.'));
+    }
+
     const newId = `CUST-${String(this.customers.length + 1).padStart(3, '0')}`;
     const newCustomer: Customer = {
       id: newId,

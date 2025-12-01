@@ -32,7 +32,7 @@ export class TicketService {
   }
 
   private getRandomDelay(): number {
-    return 250 + Math.floor(Math.random() * 750); // 250-1000ms
+    return 250 + Math.floor(Math.random() * 1750); // 250-2000ms
   }
 
   private withDelay<T>(value: T): Observable<T> {
@@ -222,6 +222,11 @@ export class TicketService {
   }
 
   createTicket(data: TicketFormData): Observable<Ticket> {
+    // Predictable error case for testing: title containing "FAIL_CREATE"
+    if (data.title.includes('FAIL_CREATE')) {
+      return this.withDelayError(new Error('Failed to create ticket: The ticket system is currently experiencing issues. Please try again later.'));
+    }
+
     const newId = `TKT-${String(this.nextTicketNumber++).padStart(3, '0')}`;
     const now = new Date();
     const newTicket: Ticket = {
@@ -269,6 +274,11 @@ export class TicketService {
 
     if (currentUser?.role !== 'admin') {
       return this.withDelayError(new Error('Only administrators can delete tickets'));
+    }
+
+    // Predictable error case for testing: ticket ID "TKT-001"
+    if (id === 'TKT-001') {
+      return this.withDelayError(new Error('Cannot delete ticket: This ticket is linked to an active SLA agreement and cannot be removed. Please contact your administrator.'));
     }
 
     const index = this.tickets.findIndex(t => t.id === id);

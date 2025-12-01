@@ -11,3 +11,4 @@ export interface LoggedInUser {
   role: UserRole;
 }
 
+

@@ -108,7 +108,7 @@ The application includes deterministic seed data:
 
 ## Simulated Backend Delays
 
-All data operations have artificial delays between **250ms and 1000ms** to simulate network latency. This is useful for testing:
+All data operations have artificial delays between **250ms and 2000ms** to simulate network latency. This is useful for testing:
 - Loading states
 - Spinners and progress indicators
 - Race conditions
@@ -116,8 +116,14 @@ All data operations have artificial delays between **250ms and 1000ms** to simul
 
 ## Error Scenarios
 
-A predictable error scenario exists for testing:
-- **Customer ID `CUST-ERROR`**: Attempting to delete this customer will return an error with a clear message visible in the UI.
+Predictable error scenarios exist for testing error handling:
+
+| Action | Trigger | Error Message |
+|--------|---------|---------------|
+| Create Ticket | Title contains `FAIL_CREATE` | "Failed to create ticket: The ticket system is currently experiencing issues. Please try again later." |
+| Delete Ticket | Ticket ID `TKT-001` | "Cannot delete ticket: This ticket is linked to an active SLA agreement and cannot be removed. Please contact your administrator." |
+| Create Customer | Name contains `FAIL_CREATE` | "Failed to create customer: A customer with similar details already exists in the system. Please verify the information and try again." |
+| Delete Customer | Customer ID `CUST-ERROR` | "Cannot delete customer: This customer has active contracts and cannot be removed. Please contact support for assistance." |
 
 ## Testability Features
 

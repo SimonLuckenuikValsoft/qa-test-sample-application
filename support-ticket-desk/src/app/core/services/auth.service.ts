@@ -13,7 +13,7 @@ export class AuthService {
   constructor() {}
 
   private getRandomDelay(): number {
-    return 250 + Math.floor(Math.random() * 750); // 250-1000ms
+    return 250 + Math.floor(Math.random() * 1750); // 250-2000ms
   }
 
   private withDelay<T>(value: T): Observable<T> {

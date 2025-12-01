@@ -124,3 +124,4 @@ export const SEED_TICKETS: Ticket[] = [
   { id: 'TKT-105', title: 'SSO logout redirect', description: 'SSO logout not redirecting to correct identity provider page.', status: 'Resolved', priority: 'Medium', createdAt: createDate(5, 4), updatedAt: createDate(1, 6), customerId: 'CUST-035', assignedToUsername: 'admin', tags: ['sso', 'logout', 'redirect'] }
 ];
 
+
